@@ -7,7 +7,7 @@ const SHEET_DATA_NAME = "MesActual";
 const DRIVE_CORTES_SHEET_NAME = "DriveCortes";
 const CONCENTRADO_SHEET_NAME = "Concentrado";
 // IMPORTANTE: Por seguridad, te sugiero rotar (cambiar) esta API Key en Google AI Studio.
-const GEMINI_API_KEY = "AIzaSyA1QAudaKulkBN7MkIReexHtKnvw9-JRgw"; 
+const GEMINI_API_KEY = "AQ.Ab8RN6KoTQA2ciTKfxjThzBgOn3BJhAAmitn3Ez-BCRcPfnFRA"; 
 
 // --- CONFIGURACIÓN DE LA INTERFAZ DE GOOGLE SHEETS ---
 
