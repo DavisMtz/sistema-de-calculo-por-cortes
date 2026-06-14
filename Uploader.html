@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargar Reporte Liverpool</title>
+    <style>
+        :root {
+            --color-liverpool: #E7007B;
+            --color-dark: #1d1d1f;
+            --color-gray: #86868b;
+            --color-light-gray: #f5f5f7;
+            --color-white: #ffffff;
+            --color-green: #34c759;
+            --color-red: #ff3b30;
+            --color-blue: #007aff;
+            --color-warning: #ff9500;
+            --border-radius: 18px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--color-light-gray);
+            color: var(--color-dark);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            background-color: var(--color-white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--color-liverpool);
+            padding: 20px;
+        }
+
+        .logo {
+            width: 150px;
+            height: auto;
+            filter: brightness(0) invert(1);
+        }
+
+        main {
+            padding: 30px 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h3 {
+            font-size: 1.6em;
+            font-weight: 600;
+            margin: 0;
+            color: var(--color-dark);
+        }
+
+        p {
+            color: var(--color-gray);
+            margin: 5px 0 0 0;
+            font-size: 1em;
+            line-height: 1.5;
+        }
+
+        /* ── UPLOAD VIEW ───────────────────────────────── */
+        #upload-view { display: block; }
+
+        #drop-zone {
+            border: 2px dashed #dcdce0;
+            border-radius: 12px;
+            padding: 40px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        #drop-zone:hover            { background-color: #fcfcfc; border-color: var(--color-liverpool); }
+        #drop-zone.has-file         { border-color: var(--color-green); background-color: #f0fff4; }
+        #drop-zone.is-loading       { pointer-events: none; opacity: 0.6; cursor: default; }
+
+        #upload-prompt              { color: var(--color-gray); font-weight: 500; }
+        #upload-prompt svg          { width: 40px; height: 40px; margin-bottom: 10px; color: #c7c7c7; display: block; margin-inline: auto; }
+        #upload-hint                { font-size: 0.78em; color: #b0b0b5; margin-top: 6px; }
+
+        #file-info                  { display: none; }
+        #file-name                  { color: var(--color-dark); font-weight: bold; word-break: break-all; }
+        #file-size                  { color: var(--color-gray); font-size: 0.82em; margin-top: 3px; }
+        #imageFile                  { display: none; }
+
+        /* ── EDIT VIEW ─────────────────────────────────── */
+        #edit-view { display: none; }
+
+        .edit-header-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.88em;
+            gap: 8px;
+        }
+
+        #report-date-display        { font-weight: 600; color: var(--color-dark); }
+        #row-counter                { color: var(--color-gray); white-space: nowrap; }
+        #row-counter.at-limit       { color: var(--color-warning); font-weight: 600; }
+
+        .table-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+        }
+
+        table                       { width: 100%; border-collapse: collapse; }
+        th, td                      { padding: 8px 10px; text-align: left; border-bottom: 1px solid #e5e5e5; vertical-align: middle; }
+        th                          { background-color: #f9f9f9; font-size: 0.82em; font-weight: 600; color: var(--color-gray); position: sticky; top: 0; z-index: 1; }
+        td:last-child               { text-align: center; width: 32px; }
+
+        td input {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 6px;
+            font-size: 0.9em;
+            font-family: inherit;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+        td input:focus              { border-color: var(--color-liverpool); outline: none; }
+        td input.invalid            { border-color: var(--color-red); background-color: #fff5f5; }
+
+        .delete-btn {
+            background: #ffebee;
+            color: var(--color-red);
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            line-height: 24px;
+            transition: background-color 0.2s ease;
+        }
+        .delete-btn:hover           { background-color: #ffcdd2; }
+
+        /* ── VALIDATION ERRORS BOX ─────────────────────── */
+        .validation-errors {
+            background-color: #fff5f5;
+            border: 1px solid #ffcccc;
+            border-radius: 10px;
+            padding: 10px 14px;
+            text-align: left;
+            display: none;
+        }
+        .validation-errors .ve-title {
+            color: var(--color-red);
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 0 0 6px 0;
+        }
+        .validation-errors ul {
+            margin: 0;
+            padding-left: 18px;
+            color: var(--color-red);
+            font-size: 0.82em;
+        }
+        .validation-errors li       { margin-bottom: 3px; }
+
+        /* ── BUTTONS ────────────────────────────────────── */
+        .button-group               { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+
+        button {
+            background: var(--color-liverpool);
+            color: var(--color-white);
+            border: none;
+            padding: 14px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
+        }
+        button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(231,0,123,0.3); }
+        button.secondary            { background-color: var(--color-gray); }
+        button.secondary:hover:not(:disabled) { box-shadow: 0 5px 15px rgba(134,134,139,0.3); }
+        button.tertiary             { background-color: #e8e8e8; color: var(--color-dark); }
+        button.tertiary:hover:not(:disabled)  { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        button:disabled             { background-color: #e0e0e0 !important; color: #a0a0a0 !important; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+        /* ── LOADER ─────────────────────────────────────── */
+        #loader                     { display: none; }
+        .spinner                    { margin: 20px auto 0; border: 4px solid #f3f3f3; border-top: 4px solid var(--color-liverpool); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
+        @keyframes spin             { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #loader-text                { display: none; font-size: 0.88em; color: var(--color-gray); margin-top: 6px; }
+
+        /* ── STATUS MESSAGE ─────────────────────────────── */
+        #status-message {
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 10px;
+            color: white;
+            display: none;
+            font-size: 0.92em;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <img src="https://assetspwa.liverpool.com.mx/assets/images/logos/liverpool-logo.svg" alt="Liverpool Logo" class="logo">
+    </header>
+
+    <main>
+        <!-- ── VISTA 1: CARGA DE ARCHIVO ── -->
+        <div id="upload-view">
+            <div>
+                <h3>Cargar Reporte Diario</h3>
+                <p>Arrastra, pega o selecciona la imagen del corte de venta.</p>
+            </div>
+            <div id="drop-zone">
+                <input type="file" id="imageFile" accept="image/png,image/jpeg,image/webp,image/gif">
+                <div id="upload-prompt">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l-3.75 3.75M12 9.75l3.75 3.75M3 17.25V6.75A2.25 2.25 0 015.25 4.5h13.5A2.25 2.25 0 0121 6.75v10.5A2.25 2.25 0 0118.75 21H5.25A2.25 2.25 0 013 17.25z"/>
+                    </svg>
+                    <div>Selecciona un archivo o arrástralo aquí</div>
+                    <div id="upload-hint">PNG, JPG, WEBP · Máx. 10 MB</div>
+                </div>
+                <div id="file-info">
+                    <div id="file-name"></div>
+                    <div id="file-size"></div>
+                </div>
+            </div>
+            <button id="uploadButton" onclick="processFile()" disabled>Procesar Imagen</button>
+        </div>
+
+        <!-- ── VISTA 2: EDICIÓN DE DATOS ── -->
+        <div id="edit-view">
+            <h3>Verificar Datos Extraídos</h3>
+            <p>Corrige los datos si es necesario y confirma para actualizar.</p>
+            <div class="edit-header-meta">
+                <span id="report-date-display"></span>
+                <span id="row-counter"></span>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Asesor</th>
+                            <th>Boletas</th>
+                            <th>Monto</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="data-table-body"></tbody>
+                </table>
+            </div>
+            <div id="validation-errors" class="validation-errors">
+                <p class="ve-title">Corrige los siguientes errores antes de continuar:</p>
+                <ul id="error-list"></ul>
+            </div>
+            <div class="button-group">
+                <button id="addRowButton" class="tertiary" onclick="addRow()">+ Añadir Fila</button>
+                <button id="cancelButton" class="secondary" onclick="cancelUpdate()">Cancelar</button>
+                <button id="submitButton" onclick="submitEditedData()">Aceptar y Actualizar</button>
+            </div>
+        </div>
+
+        <div id="loader"><div class="spinner"></div></div>
+        <div id="loader-text"></div>
+        <div id="status-message"></div>
+    </main>
+</div>
+
+<script>
+    // ═══════════════════════════════════════════════════════════════
+    //  CONFIGURACIÓN CENTRAL
+    //  Todos los límites y reglas en un solo lugar.
+    // ═══════════════════════════════════════════════════════════════
+    const CONFIG = {
+        MAX_FILE_SIZE_BYTES : 10 * 1024 * 1024,  // 10 MB
+        MAX_FILE_SIZE_LABEL : '10 MB',
+        ALLOWED_MIME_TYPES  : ['image/png', 'image/jpeg', 'image/webp', 'image/gif'],
+        ALLOWED_EXTENSIONS  : ['.png', '.jpg', '.jpeg', '.webp', '.gif'],
+        MAX_ROWS            : 60,
+        MAX_NAME_LENGTH     : 80,
+        MIN_NAME_LENGTH     : 2,
+        MAX_TICKETS         : 9999,
+        MAX_AMOUNT          : 9_999_999.99,
+    };
+
+    // ═══════════════════════════════════════════════════════════════
+    //  REFERENCIAS DOM
+    // ═══════════════════════════════════════════════════════════════
+    const uploadView    = document.getElementById('upload-view');
+    const editView      = document.getElementById('edit-view');
+    const dropZone      = document.getElementById('drop-zone');
+    const fileInput     = document.getElementById('imageFile');
+    const uploadButton  = document.getElementById('uploadButton');
+    const submitButton  = document.getElementById('submitButton');
+    const addRowButton  = document.getElementById('addRowButton');
+    const cancelButton  = document.getElementById('cancelButton');
+    const uploadPrompt  = document.getElementById('upload-prompt');
+    const fileInfo      = document.getElementById('file-info');
+    const fileNameDisp  = document.getElementById('file-name');
+    const fileSizeDisp  = document.getElementById('file-size');
+    const loader        = document.getElementById('loader');
+    const loaderText    = document.getElementById('loader-text');
+    const statusMsg     = document.getElementById('status-message');
+    const rowCounter    = document.getElementById('row-counter');
+    const validationBox = document.getElementById('validation-errors');
+    const errorList     = document.getElementById('error-list');
+
+    let processedDataCache = null;
+
+    // ═══════════════════════════════════════════════════════════════
+    //  UTILIDADES DE SEGURIDAD
+    // ═══════════════════════════════════════════════════════════════
+
+    /**
+     * Escapa caracteres HTML para prevenir XSS al insertar datos
+     * externos en atributos o contenido del DOM.
+     */
+    function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    /** Formatea bytes a texto legible. */
+    function formatBytes(bytes) {
+        if (bytes < 1024)          return bytes + ' B';
+        if (bytes < 1024 * 1024)   return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  VALIDACIÓN DE ARCHIVO
+    // ═══════════════════════════════════════════════════════════════
+
+    /**
+     * Valida un archivo de imagen con múltiples capas de comprobación.
+     * @returns {{ valid: boolean, error?: string }}
+     */
+    function validateFile(file) {
+        if (!file) return { valid: false, error: 'No se seleccionó ningún archivo.' };
+
+        if (file.size === 0)
+            return { valid: false, error: 'El archivo seleccionado está vacío.' };
+
+        if (file.size > CONFIG.MAX_FILE_SIZE_BYTES)
+            return { valid: false, error: `El archivo supera el límite de ${CONFIG.MAX_FILE_SIZE_LABEL}. Tamaño actual: ${formatBytes(file.size)}.` };
+
+        // Capa 1: MIME type
+        if (!CONFIG.ALLOWED_MIME_TYPES.includes(file.type))
+            return { valid: false, error: `Tipo de archivo no permitido "${file.type || 'desconocido'}". Usa PNG, JPG o WEBP.` };
+
+        // Capa 2: extensión (defensa en profundidad)
+        const parts = file.name.split('.');
+        if (parts.length < 2) return { valid: false, error: 'El archivo no tiene extensión.' };
+        const ext = '.' + parts.pop().toLowerCase();
+        if (!CONFIG.ALLOWED_EXTENSIONS.includes(ext))
+            return { valid: false, error: `Extensión no permitida (${ext}). Usa PNG, JPG o WEBP.` };
+
+        return { valid: true };
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  VALIDACIÓN DE DATOS DE LA TABLA
+    // ═══════════════════════════════════════════════════════════════
+
+    /**
+     * Valida cada fila de la tabla antes de enviar al backend.
+     * Marca los campos inválidos visualmente.
+     * @returns {{ valid: boolean, errors: string[], agents: Array }}
+     */
+    function validateTableData() {
+        const tableBody = document.getElementById('data-table-body');
+        const rows      = tableBody.querySelectorAll('tr');
+        const errors    = [];
+        const agents    = [];
+
+        // Limpiar marcas de error previas
+        tableBody.querySelectorAll('input.invalid').forEach(i => i.classList.remove('invalid'));
+
+        if (rows.length === 0) {
+            errors.push('Debe haber al menos un asesor en la tabla.');
+            return { valid: false, errors, agents: [] };
+        }
+
+        rows.forEach((row, idx) => {
+            const nameInput    = row.querySelector('.name-input');
+            const ticketsInput = row.querySelector('.tickets-input');
+            const amountInput  = row.querySelector('.amount-input');
+
+            const rawName    = nameInput.value.trim();
+            const rawTickets = ticketsInput.value.trim();
+            const rawAmount  = amountInput.value.trim();
+            const rowNum     = idx + 1;
+            let   rowValid   = true;
+
+            // — Nombre
+            if (rawName.length === 0) {
+                errors.push(`Fila ${rowNum}: El nombre del asesor está vacío.`);
+                nameInput.classList.add('invalid');
+                rowValid = false;
+            } else if (rawName.length < CONFIG.MIN_NAME_LENGTH) {
+                errors.push(`Fila ${rowNum}: El nombre es demasiado corto (mínimo ${CONFIG.MIN_NAME_LENGTH} caracteres).`);
+                nameInput.classList.add('invalid');
+                rowValid = false;
+            } else if (rawName.length > CONFIG.MAX_NAME_LENGTH) {
+                errors.push(`Fila ${rowNum}: El nombre excede ${CONFIG.MAX_NAME_LENGTH} caracteres.`);
+                nameInput.classList.add('invalid');
+                rowValid = false;
+            }
+
+            // — Boletas: entero, entre 0 y MAX_TICKETS
+            const tickets    = Number(rawTickets);
+            const ticketsOk  = rawTickets !== '' && !isNaN(tickets) && Number.isInteger(tickets) && tickets >= 0 && tickets <= CONFIG.MAX_TICKETS;
+            if (!ticketsOk) {
+                errors.push(`Fila ${rowNum}${rawName ? ' (' + rawName + ')' : ''}: Boletas inválidas. Debe ser un número entero entre 0 y ${CONFIG.MAX_TICKETS}.`);
+                ticketsInput.classList.add('invalid');
+                rowValid = false;
+            }
+
+            // — Monto: número, entre 0 y MAX_AMOUNT
+            const amount   = parseFloat(rawAmount);
+            const amountOk = rawAmount !== '' && !isNaN(amount) && amount >= 0 && amount <= CONFIG.MAX_AMOUNT;
+            if (!amountOk) {
+                errors.push(`Fila ${rowNum}${rawName ? ' (' + rawName + ')' : ''}: Monto inválido. Debe ser entre 0 y ${CONFIG.MAX_AMOUNT.toLocaleString('es-MX')}.`);
+                amountInput.classList.add('invalid');
+                rowValid = false;
+            }
+
+            if (rowValid) {
+                agents.push({
+                    name:    rawName,
+                    tickets: tickets,
+                    amount:  parseFloat(amount.toFixed(2))
+                });
+            }
+        });
+
+        // — Nombres duplicados (solo si ya no hay otros errores)
+        if (agents.length > 0) {
+            const names      = agents.map(a => a.name.toLowerCase());
+            const duplicates = names.filter((n, i) => names.indexOf(n) !== i);
+            if (duplicates.length > 0) {
+                const unique = [...new Set(duplicates)];
+                errors.push(`Nombres duplicados encontrados: "${unique.join('", "')}". Verifica si son la misma persona.`);
+            }
+        }
+
+        return { valid: errors.length === 0, errors, agents };
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  EVENTOS DE CARGA DE ARCHIVO
+    // ═══════════════════════════════════════════════════════════════
+
+    dropZone.addEventListener('click', () => {
+        if (!dropZone.classList.contains('is-loading')) fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) handleFiles(e.target.files);
+    });
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (!dropZone.classList.contains('is-loading'))
+            dropZone.style.borderColor = 'var(--color-liverpool)';
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.style.borderColor = '#dcdce0';
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = '#dcdce0';
+        if (dropZone.classList.contains('is-loading')) return;
+        if (e.dataTransfer.files.length > 0) {
+            fileInput.files = e.dataTransfer.files;
+            handleFiles(e.dataTransfer.files);
+        }
+    });
+
+    document.addEventListener('paste', (e) => {
+        if (dropZone.classList.contains('is-loading')) return;
+        const items = e.clipboardData.files;
+        if (items.length > 0 && items[0].type.startsWith('image/')) {
+            fileInput.files = items;
+            handleFiles(items);
+        }
+    });
+
+    function handleFiles(files) {
+        const file = files[0];
+        clearStatus();
+
+        const check = validateFile(file);
+        if (!check.valid) {
+            setStatus(check.error, 'error');
+            resetUploaderUI();
+            return;
+        }
+
+        // Mostrar info del archivo (escapeHtml en el nombre para seguridad)
+        uploadPrompt.style.display   = 'none';
+        fileNameDisp.textContent     = file.name;          // textContent: seguro
+        fileSizeDisp.textContent     = formatBytes(file.size);
+        fileInfo.style.display       = 'block';
+        dropZone.classList.add('has-file');
+        uploadButton.disabled        = false;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  PASO 1 — PROCESAR IMAGEN
+    // ═══════════════════════════════════════════════════════════════
+
+    function processFile() {
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        // Re-validar justo antes de enviar (el usuario pudo haber manipulado el input)
+        const check = validateFile(file);
+        if (!check.valid) {
+            setStatus(check.error, 'error');
+            return;
+        }
+
+        setLoadingState(true, 'Analizando imagen con IA…');
+        dropZone.classList.add('is-loading');
+
+        const reader  = new FileReader();
+        reader.onload = (e) => {
+            const fileData = e.target.result.split(',')[1];
+            if (!fileData) {
+                onFailure({ message: 'No se pudo leer el archivo. Intenta de nuevo.' });
+                return;
+            }
+            google.script.run
+                .withSuccessHandler(onProcessSuccess)
+                .withFailureHandler(onFailure)
+                .processImageOnly({
+                    fileName : file.name,
+                    mimeType : file.type,
+                    fileData : fileData
+                });
+        };
+        // Manejar errores del FileReader
+        reader.onerror = () => onFailure({ message: 'Error al leer el archivo. Intenta de nuevo.' });
+        reader.readAsDataURL(file);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  PASO 1 (ÉXITO) — MOSTRAR TABLA DE EDICIÓN
+    // ═══════════════════════════════════════════════════════════════
+
+    function onProcessSuccess(response) {
+        setLoadingState(false);
+        dropZone.classList.remove('is-loading');
+
+        // Validar que la respuesta tenga la estructura esperada
+        if (!response || typeof response !== 'object') {
+            onFailure({ message: 'Respuesta inesperada del servidor. Intenta de nuevo.' });
+            return;
+        }
+
+        if (response.status === 'success') {
+            if (!response.data || !Array.isArray(response.data.agents)) {
+                onFailure({ message: 'Los datos recibidos tienen un formato inesperado.' });
+                return;
+            }
+            processedDataCache = response.data;
+            displayDataForEditing(response.data);
+        } else {
+            onFailure({ message: response.message || 'Error desconocido al procesar la imagen.' });
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  PASO 2 — POBLAR Y GESTIONAR LA TABLA
+    // ═══════════════════════════════════════════════════════════════
+
+    function displayDataForEditing(data) {
+        // textContent para el nombre de la fecha: seguro contra XSS
+        document.getElementById('report-date-display').textContent = `📅 ${data.reportDate}`;
+        const tableBody = document.getElementById('data-table-body');
+        tableBody.innerHTML = '';
+
+        // Acotar a MAX_ROWS por si el backend devuelve más registros de los esperados
+        const safeAgents = Array.isArray(data.agents)
+            ? data.agents.slice(0, CONFIG.MAX_ROWS)
+            : [];
+
+        safeAgents.forEach((agent) => appendRow(tableBody, agent.name, agent.tickets, agent.amount));
+
+        updateRowCounter();
+        hideValidationErrors();
+        uploadView.style.display = 'none';
+        editView.style.display   = 'block';
+    }
+
+    /**
+     * Crea e inserta una fila en el tbody.
+     * Usa escapeHtml() en los valores que se interpolan dentro de atributos HTML
+     * para prevenir XSS si el backend devuelve datos maliciosos.
+     */
+    function appendRow(tbody, name = '', tickets = 0, amount = 0.00) {
+        const row = tbody.insertRow();
+        row.innerHTML = `
+            <td>
+                <input type="text"
+                       class="name-input"
+                       maxlength="${CONFIG.MAX_NAME_LENGTH}"
+                       value="${escapeHtml(String(name))}"
+                       placeholder="Nombre Asesor"
+                       autocomplete="off">
+            </td>
+            <td>
+                <input type="number"
+                       class="tickets-input"
+                       min="0"
+                       max="${CONFIG.MAX_TICKETS}"
+                       step="1"
+                       value="${escapeHtml(String(parseInt(tickets) || 0))}">
+            </td>
+            <td>
+                <input type="number"
+                       class="amount-input"
+                       min="0"
+                       max="${CONFIG.MAX_AMOUNT}"
+                       step="0.01"
+                       value="${parseFloat(amount || 0).toFixed(2)}">
+            </td>
+            <td>
+                <button class="delete-btn" onclick="deleteRow(this)" title="Eliminar fila">×</button>
+            </td>
+        `;
+    }
+
+    function addRow() {
+        const tableBody = document.getElementById('data-table-body');
+        if (tableBody.rows.length >= CONFIG.MAX_ROWS) {
+            setStatus(`Límite máximo de ${CONFIG.MAX_ROWS} asesores alcanzado.`, 'warning');
+            return;
+        }
+        clearStatus();
+        hideValidationErrors();
+        appendRow(tableBody);
+        updateRowCounter();
+
+        // Scroll al final y enfocar el nuevo campo de nombre
+        const container = document.querySelector('.table-container');
+        container.scrollTop = container.scrollHeight;
+        tableBody.rows[tableBody.rows.length - 1].querySelector('.name-input').focus();
+    }
+
+    function deleteRow(button) {
+        button.closest('tr').remove();
+        updateRowCounter();
+        hideValidationErrors();
+        clearStatus();
+    }
+
+    function updateRowCounter() {
+        const count = document.getElementById('data-table-body').rows.length;
+        rowCounter.textContent = `${count} / ${CONFIG.MAX_ROWS} asesores`;
+        rowCounter.classList.toggle('at-limit', count >= CONFIG.MAX_ROWS);
+        addRowButton.disabled = count >= CONFIG.MAX_ROWS;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  PASO 3 — ENVIAR DATOS EDITADOS
+    // ═══════════════════════════════════════════════════════════════
+
+    function submitEditedData() {
+        hideValidationErrors();
+        clearStatus();
+
+        if (!processedDataCache) {
+            setStatus('Error interno: no hay datos en caché. Vuelve a cargar la imagen.', 'error');
+            return;
+        }
+
+        const { valid, errors, agents } = validateTableData();
+        if (!valid) {
+            showValidationErrors(errors);
+            return;
+        }
+
+        setLoadingState(true, 'Actualizando hojas de cálculo…');
+        setEditButtons(true);
+
+        const finalData = {
+            reportDate : processedDataCache.reportDate,
+            storeType  : processedDataCache.storeType,
+            agents     : agents
+        };
+
+        google.script.run
+            .withSuccessHandler(onUpdateSuccess)
+            .withFailureHandler(onFailure)
+            .updateSheetsWithData(finalData);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  PASO 3 (ÉXITO)
+    // ═══════════════════════════════════════════════════════════════
+
+    function onUpdateSuccess(response) {
+        setLoadingState(false);
+
+        if (!response || typeof response !== 'object') {
+            onFailure({ message: 'Respuesta inesperada del servidor al actualizar.' });
+            return;
+        }
+
+        if (response.status === 'success') {
+            setStatus('✅ ' + (response.message || 'Actualización exitosa.'), 'success');
+            setTimeout(() => google.script.host.close(), 2500);
+        } else {
+            onFailure({ message: response.message || 'Error desconocido al actualizar.' });
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  CANCELAR
+    // ═══════════════════════════════════════════════════════════════
+
+    function cancelUpdate() {
+        const rowCount = document.getElementById('data-table-body').rows.length;
+        if (rowCount > 0 && !confirm('¿Cancelar? Los datos extraídos se perderán y tendrás que volver a cargar la imagen.')) {
+            return;
+        }
+        editView.style.display   = 'none';
+        uploadView.style.display = 'block';
+        processedDataCache       = null; // limpiar caché
+        resetUploaderUI();
+        hideValidationErrors();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  AUXILIARES
+    // ═══════════════════════════════════════════════════════════════
+
+    function onFailure(error) {
+        setLoadingState(false);
+        dropZone.classList.remove('is-loading');
+        const msg = (error && typeof error.message === 'string' && error.message)
+            ? error.message
+            : 'Error desconocido. Intenta de nuevo.';
+        setStatus('⚠️ ' + msg, 'error');
+        // Rehabilitar todos los controles
+        uploadButton.disabled = false;
+        setEditButtons(false);
+    }
+
+    /** Habilita o deshabilita todos los botones de la vista de edición. */
+    function setEditButtons(disabled) {
+        submitButton.disabled = disabled;
+        cancelButton.disabled = disabled;
+        addRowButton.disabled = disabled || (document.getElementById('data-table-body').rows.length >= CONFIG.MAX_ROWS);
+    }
+
+    function setLoadingState(isLoading, message = '') {
+        loader.style.display          = isLoading ? 'block' : 'none';
+        loaderText.textContent        = message;
+        loaderText.style.display      = (isLoading && message) ? 'block' : 'none';
+        uploadButton.disabled         = isLoading;
+        submitButton.disabled         = isLoading;
+    }
+
+    function resetUploaderUI() {
+        fileInput.value              = '';
+        uploadPrompt.style.display   = 'block';
+        fileInfo.style.display       = 'none';
+        fileNameDisp.textContent     = '';
+        fileSizeDisp.textContent     = '';
+        dropZone.classList.remove('has-file', 'is-loading');
+        uploadButton.disabled        = true;
+        clearStatus();
+    }
+
+    function setStatus(message, type = 'info') {
+        const colors = {
+            success : 'var(--color-green)',
+            error   : 'var(--color-red)',
+            warning : 'var(--color-warning)',
+            info    : 'var(--color-blue)',
+        };
+        statusMsg.textContent        = message;
+        statusMsg.style.background   = colors[type] || colors.info;
+        statusMsg.style.display      = message ? 'block' : 'none';
+    }
+
+    function clearStatus() {
+        statusMsg.textContent  = '';
+        statusMsg.style.display = 'none';
+    }
+
+    function showValidationErrors(errors) {
+        errorList.innerHTML = '';
+        errors.forEach(err => {
+            const li = document.createElement('li');
+            li.textContent = err;   // textContent, nunca innerHTML: seguro contra XSS
+            errorList.appendChild(li);
+        });
+        validationBox.style.display = 'block';
+        validationBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function hideValidationErrors() {
+        validationBox.style.display = 'none';
+        errorList.innerHTML         = '';
+    }
+</script>
+</body>
+</html>
