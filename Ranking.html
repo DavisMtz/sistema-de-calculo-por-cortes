@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking de Ventas Liverpool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-liverpool: #E7007B;
+            --color-liverpool-dark: #a20057;
+            --color-dark: #1a1a1a;
+            --color-gray: #6e6e73;
+            --color-light-gray: #f5f5f7;
+            --color-white: #ffffff;
+            --color-green: #34C759;
+            --color-red: #FF3B30;
+            --color-yellow: #FFCC00;
+            --color-blue: #007AFF;
+            --color-gold: #FFD700;
+            --color-silver: #C0C0C0;
+            --color-bronze: #CD7F32;
+            --border-radius: 24px;
+            --shadow: 0 12px 28px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
+            --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes initial-row-load {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--color-light-gray);
+            color: var(--color-dark);
+            margin: 0;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            animation: fadeIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        header {
+            background: linear-gradient(45deg, var(--color-liverpool), #d3006f);
+            color: var(--color-white);
+            padding: 30px 40px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(231, 0, 123, 0.3);
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        .logo {
+            width: 160px;
+            height: auto;
+            filter: brightness(0) invert(1);
+            margin-bottom: 15px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin: 0;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            font-size: 1.2em;
+            margin: 5px 0 0 0;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: var(--color-white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .ranking-table-container { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td {
+            padding: 18px 25px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-light-gray);
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+        thead th {
+            background-color: #fafafa;
+            font-weight: 600;
+            color: var(--color-gray);
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        tbody tr {
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+        }
+        .initial-load {
+             animation: initial-row-load 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+             animation-delay: calc(var(--i, 0) * 0.07s);
+             opacity: 0;
+        }
+        tbody tr:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.015) !important; 
+            z-index: 5;
+            position: relative;
+        }
+        tbody tr:last-child td { border-bottom: none; }
+        
+        .rank-1, .rank-2, .rank-3 { font-weight: 600; }
+        .rank-1 { background: linear-gradient(90deg, #fffcf2, #fff); }
+        .rank-2 { background: linear-gradient(90deg, #f7f7f7, #fff); }
+        .rank-3 { background: linear-gradient(90deg, #fff6ed, #fff); }
+
+        td.rank {
+            font-weight: 700;
+            font-size: 1.5em;
+            color: var(--color-gray);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .medal-icon {
+            width: 32px;
+            height: 32px;
+            animation: sparkle 4s infinite ease-in-out;
+            animation-delay: calc(var(--i, 0) * 0.2s);
+        }
+        
+        .change-icon-cell { text-align: center; }
+        .change-icon-wrapper {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .change-icon-wrapper svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+        }
+        .change-icon-wrapper.up { background-color: #e5f9e9; color: var(--color-green); }
+        .change-icon-wrapper.down { background-color: #ffebee; color: var(--color-red); }
+        .change-icon-wrapper.same { background-color: #fff8e1; color: var(--color-yellow); }
+        .change-icon-wrapper.new { background-color: #e5f2ff; color: var(--color-blue); }
+        .change-icon-wrapper .icon-shape { fill: currentColor; }
+
+        .agent-name { font-weight: 600; color: var(--color-dark); font-size: 1.05em; }
+        .amount {
+            font-weight: 700;
+            font-family: 'Poppins', 'Menlo', 'monospace';
+            font-size: 1.1em;
+            background: linear-gradient(45deg, var(--color-liverpool), var(--color-liverpool-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .notes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .note-item {
+            background: var(--color-white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .note-icon {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+        }
+        .note-icon svg { width: 24px; height: 24px; fill: var(--color-white); }
+        .note-text { font-size: 0.85em; color: var(--color-gray); line-height: 1.5; }
+
+        footer { text-align: center; margin-top: 40px; color: #999; font-size: 0.9em; }
+        
+        .loader {
+            display: block;
+            margin: 80px auto;
+            border: 5px solid #e9e9e9;
+            border-top: 5px solid var(--color-liverpool);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="https://assetspwa.liverpool.com.mx/assets/images/logos/liverpool-logo.svg" alt="Liverpool Logo" class="logo">
+            <h1>Ranking de Ventas</h1>
+            <h2>Actualización Diaria de Venta</h2>
+        </header>
+        
+        <div id="loader" class="loader"></div>
+        <div class="card" id="rankingCard" style="display:none;">
+            <div class="ranking-table-container">
+                <table id="rankingTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Cambio</th>
+                            <th>Asesor de Venta</th>
+                            <th>Monto Acumulado</th>
+                            <th>Boletas</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="notes-container" id="notes" style="display:none;">
+            <div class="note-item">
+                <div class="note-icon" style="background: #6c5ce7;"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path></svg></div>
+                <p class="note-text">* Esta tabla se actualiza con los cortes finales compartidos al final de cada día.</p>
+            </div>
+            <div class="note-item">
+                <div class="note-icon" style="background: #fd79a8;"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-5h2v2h-2zm0-8h2v6h-2z"></path></svg></div>
+                <p class="note-text">** Las compras con referencia y ventas post-corte no se reflejarán aquí.</p>
+            </div>
+             <div class="note-item">
+                <div class="note-icon" style="background: #00b894;"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg></div>
+                <p class="note-text">*** Solo se suman los cortes finales compartidos, incluyendo los de SBB (Suburbia).</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>Los datos se actualizan automáticamente cada 30 segundos.</p>
+            <p><strong>Desarrollado por David Martinez</strong></p>
+        </footer>
+    </div>
+
+    <script>
+        let agentState = {};
+        let isFirstLoad = true;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            fetchRankingData();
+            setInterval(fetchRankingData, 30000);
+        });
+
+        function fetchRankingData() {
+            if (isFirstLoad) {
+                document.getElementById('loader').style.display = 'block';
+            }
+            google.script.run
+                .withSuccessHandler(updateRankingTable)
+                .withFailureHandler(error => console.error('Error fetching data:', error))
+                .getRankingData();
+        }
+
+        function getChangeIcon(change) {
+            const icons = {
+                up: `<div class="change-icon-wrapper up"><svg viewBox="0 0 24 24"><path class="icon-shape" d="M12 8l-6 6h12z"/></svg> Sube</div>`,
+                down: `<div class="change-icon-wrapper down"><svg viewBox="0 0 24 24"><path class="icon-shape" d="M12 16l6-6H6z"/></svg> Baja</div>`,
+                same: `<div class="change-icon-wrapper same"><svg viewBox="0 0 24 24"><path class="icon-shape" d="M20 11H4v2h16z"/></svg> Igual</div>`,
+                new: `<div class="change-icon-wrapper new"><svg viewBox="0 0 24 24"><path class="icon-shape" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4 11h-3v3h-2v-3H8v-2h3V8h2v3h3v2z"/></svg> Nuevo</div>`
+            };
+            return icons[change] || icons['same'];
+        }
+
+        function getMedalIcon(rank) {
+             const medals = {
+                1: `<svg class="medal-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#FFD700" stroke="#B89B00" stroke-width="1.5"/><text x="12" y="16.5" font-family="Poppins" font-weight="700" font-size="11" text-anchor="middle" fill="#8C6200">1</text></svg>`,
+                2: `<svg class="medal-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#C0C0C0" stroke="#A0A0A0" stroke-width="1.5"/><text x="12" y="16.5" font-family="Poppins" font-weight="700" font-size="11" text-anchor="middle" fill="#4E4E4E">2</text></svg>`,
+                3: `<svg class="medal-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#CD7F32" stroke="#A46628" stroke-width="1.5"/><text x="12" y="16.5" font-family="Poppins" font-weight="700" font-size="11" text-anchor="middle" fill="#5D3A1A">3</text></svg>`
+            };
+            return medals[rank] || '';
+        }
+
+        function updateRankingTable(rankingData) {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('rankingCard').style.display = 'block';
+            document.getElementById('notes').style.display = 'grid';
+
+            const tableBody = document.getElementById('rankingTable').querySelector('tbody');
+            const newAgentState = {};
+            const newRows = [];
+            const rowHeight = tableBody.querySelector('tr')?.offsetHeight || 75;
+
+            if (!rankingData || rankingData.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 40px; color: var(--color-gray);">Aún no hay datos para mostrar este mes.</td></tr>';
+                agentState = {};
+                return;
+            }
+
+            rankingData.forEach((agent, index) => {
+                const row = document.createElement('tr');
+                row.style.setProperty('--i', index);
+                if (agent.rank <= 3) row.classList.add(`rank-${agent.rank}`);
+
+                const changeIconHtml = getChangeIcon(agent.change);
+                const medalIconHtml = getMedalIcon(agent.rank);
+                
+                row.innerHTML = `
+                    <td class="rank">${medalIconHtml}<b>${agent.rank}</b></td>
+                    <td class="change-icon-cell">${changeIconHtml}</td>
+                    <td class="agent-name">${agent.name}</td>
+                    <td class="amount"><b>${agent.amount}</b></td>
+                    <td>${agent.tickets}</td>
+                `;
+                
+                newRows.push(row);
+                newAgentState[agent.name] = { rank: index };
+
+                if (isFirstLoad) {
+                    row.classList.add('initial-load');
+                } else if (agentState[agent.name]) {
+                    const oldRank = agentState[agent.name].rank;
+                    const newRank = index;
+                    if (oldRank !== newRank) {
+                        const deltaY = (oldRank - newRank) * rowHeight;
+                        row.style.transform = `translateY(${deltaY}px)`;
+                    }
+                }
+            });
+
+            tableBody.innerHTML = '';
+            newRows.forEach(row => tableBody.appendChild(row));
+
+            if (!isFirstLoad) {
+                requestAnimationFrame(() => {
+                    newRows.forEach(row => {
+                        // Solo animar las filas que realmente se movieron
+                        if(row.style.transform) {
+                            row.style.transform = 'translateY(0)';
+                        }
+                    });
+                });
+            }
+
+            agentState = newAgentState;
+            isFirstLoad = false;
+        }
+    </script>
+</body>
+</html>
+
