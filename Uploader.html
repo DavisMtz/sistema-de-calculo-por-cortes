@@ -23,14 +23,10 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--color-light-gray);
             color: var(--color-dark);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            margin: 0; padding: 20px;
+            display: flex; justify-content: center; align-items: flex-start;
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
@@ -38,185 +34,136 @@
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             overflow: hidden;
-            width: 100%;
-            max-width: 440px;
+            width: 100%; max-width: 440px;
             text-align: center;
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
         }
 
-        header {
-            background-color: var(--color-liverpool);
-            padding: 20px;
-        }
+        header { background-color: var(--color-liverpool); padding: 20px; }
+        .logo  { width: 150px; height: auto; filter: brightness(0) invert(1); }
+        main   { padding: 30px 25px; display: flex; flex-direction: column; gap: 16px; }
 
-        .logo {
-            width: 150px;
-            height: auto;
-            filter: brightness(0) invert(1);
-        }
+        h3 { font-size: 1.6em; font-weight: 600; margin: 0; color: var(--color-dark); }
+        p  { color: var(--color-gray); margin: 4px 0 0; font-size: 1em; line-height: 1.5; }
 
-        main {
-            padding: 30px 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        h3 {
-            font-size: 1.6em;
-            font-weight: 600;
-            margin: 0;
-            color: var(--color-dark);
-        }
-
-        p {
-            color: var(--color-gray);
-            margin: 5px 0 0 0;
-            font-size: 1em;
-            line-height: 1.5;
-        }
-
-        /* ── UPLOAD VIEW ───────────────────────────────── */
+        /* ── UPLOAD VIEW ─────────────────────────────────── */
         #upload-view { display: block; }
 
         #drop-zone {
-            border: 2px dashed #dcdce0;
-            border-radius: 12px;
-            padding: 40px 20px;
-            cursor: pointer;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
+            border: 2px dashed #dcdce0; border-radius: 12px;
+            padding: 40px 20px; cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
         }
+        #drop-zone:hover        { background-color: #fcfcfc; border-color: var(--color-liverpool); }
+        #drop-zone.has-file     { border-color: var(--color-green); background-color: #f0fff4; }
+        #drop-zone.is-loading   { pointer-events: none; opacity: 0.6; cursor: default; }
 
-        #drop-zone:hover            { background-color: #fcfcfc; border-color: var(--color-liverpool); }
-        #drop-zone.has-file         { border-color: var(--color-green); background-color: #f0fff4; }
-        #drop-zone.is-loading       { pointer-events: none; opacity: 0.6; cursor: default; }
+        #upload-prompt          { color: var(--color-gray); font-weight: 500; }
+        #upload-prompt svg      { width: 40px; height: 40px; margin-bottom: 10px; color: #c7c7c7; display: block; margin-inline: auto; }
+        #upload-hint            { font-size: 0.78em; color: #b0b0b5; margin-top: 6px; }
+        #file-info              { display: none; }
+        #file-name              { color: var(--color-dark); font-weight: bold; word-break: break-all; }
+        #file-size              { color: var(--color-gray); font-size: 0.82em; margin-top: 3px; }
+        #imageFile              { display: none; }
 
-        #upload-prompt              { color: var(--color-gray); font-weight: 500; }
-        #upload-prompt svg          { width: 40px; height: 40px; margin-bottom: 10px; color: #c7c7c7; display: block; margin-inline: auto; }
-        #upload-hint                { font-size: 0.78em; color: #b0b0b5; margin-top: 6px; }
-
-        #file-info                  { display: none; }
-        #file-name                  { color: var(--color-dark); font-weight: bold; word-break: break-all; }
-        #file-size                  { color: var(--color-gray); font-size: 0.82em; margin-top: 3px; }
-        #imageFile                  { display: none; }
-
-        /* ── EDIT VIEW ─────────────────────────────────── */
+        /* ── EDIT VIEW ───────────────────────────────────── */
         #edit-view { display: none; }
 
-        .edit-header-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.88em;
-            gap: 8px;
+        /* Campo de fecha */
+        .date-field     { text-align: left; }
+        .date-field-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .date-label     { font-size: 0.8em; font-weight: 600; color: var(--color-gray); display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.03em; }
+        .date-input-wrapper { display: flex; align-items: center; gap: 6px; flex: 1; }
+
+        .date-input {
+            flex: 1;
+            border: 1.5px solid #ddd; border-radius: 8px;
+            padding: 8px 11px;
+            font-size: 1em; font-family: inherit;
+            font-variant-numeric: tabular-nums;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        .date-input:focus              { border-color: var(--color-liverpool); outline: none; }
+        .date-input.invalid            { border-color: var(--color-red); background-color: #fff5f5; }
+        .date-input.date-ok            { border-color: var(--color-green); background-color: #f0fff4; }
+        .date-input.date-needs-input   { border-color: var(--color-warning); background-color: #fffbf0; }
+
+        #date-valid-icon { font-size: 1.1em; flex-shrink: 0; width: 20px; text-align: center; }
+        #row-counter     { color: var(--color-gray); font-size: 0.82em; white-space: nowrap; flex-shrink: 0; }
+        #row-counter.at-limit { color: var(--color-warning); font-weight: 600; }
+
+        #date-warning {
+            margin: 5px 0 0;
+            font-size: 0.82em; font-weight: 500;
+            color: #b45309;
+            background: #fff8ee; border: 1px solid #fcd490;
+            border-radius: 6px; padding: 6px 10px;
+            display: none; text-align: left;
         }
 
-        #report-date-display        { font-weight: 600; color: var(--color-dark); }
-        #row-counter                { color: var(--color-gray); white-space: nowrap; }
-        #row-counter.at-limit       { color: var(--color-warning); font-weight: 600; }
-
+        /* ── TABLA ───────────────────────────────────────── */
         .table-container {
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px solid #e5e5e5;
-            border-radius: 8px;
+            max-height: 260px; overflow-y: auto;
+            border: 1px solid #e5e5e5; border-radius: 8px;
         }
+        table                 { width: 100%; border-collapse: collapse; }
+        th, td                { padding: 8px 10px; text-align: left; border-bottom: 1px solid #e5e5e5; vertical-align: middle; }
+        th                    { background-color: #f9f9f9; font-size: 0.82em; font-weight: 600; color: var(--color-gray); position: sticky; top: 0; z-index: 1; }
+        td:last-child         { text-align: center; width: 32px; }
+        td input              { width: 100%; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; padding: 6px; font-size: 0.9em; font-family: inherit; transition: border-color 0.2s, background-color 0.2s; }
+        td input:focus        { border-color: var(--color-liverpool); outline: none; }
+        td input.invalid      { border-color: var(--color-red); background-color: #fff5f5; }
+        .delete-btn           { background: #ffebee; color: var(--color-red); border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold; font-size: 16px; line-height: 24px; transition: background-color 0.2s; }
+        .delete-btn:hover     { background-color: #ffcdd2; }
 
-        table                       { width: 100%; border-collapse: collapse; }
-        th, td                      { padding: 8px 10px; text-align: left; border-bottom: 1px solid #e5e5e5; vertical-align: middle; }
-        th                          { background-color: #f9f9f9; font-size: 0.82em; font-weight: 600; color: var(--color-gray); position: sticky; top: 0; z-index: 1; }
-        td:last-child               { text-align: center; width: 32px; }
-
-        td input {
-            width: 100%;
-            box-sizing: border-box;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 6px;
-            font-size: 0.9em;
-            font-family: inherit;
-            transition: border-color 0.2s ease, background-color 0.2s ease;
-        }
-        td input:focus              { border-color: var(--color-liverpool); outline: none; }
-        td input.invalid            { border-color: var(--color-red); background-color: #fff5f5; }
-
-        .delete-btn {
-            background: #ffebee;
-            color: var(--color-red);
-            border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            line-height: 24px;
-            transition: background-color 0.2s ease;
-        }
-        .delete-btn:hover           { background-color: #ffcdd2; }
-
-        /* ── VALIDATION ERRORS BOX ─────────────────────── */
-        .validation-errors {
-            background-color: #fff5f5;
-            border: 1px solid #ffcccc;
-            border-radius: 10px;
-            padding: 10px 14px;
+        /* ── BANNER DUPLICADO ────────────────────────────── */
+        #duplicate-banner {
+            background: #fffbf0;
+            border: 1.5px solid var(--color-warning);
+            border-radius: 12px;
+            padding: 14px 16px;
             text-align: left;
             display: none;
         }
-        .validation-errors .ve-title {
-            color: var(--color-red);
-            font-size: 0.85em;
-            font-weight: 600;
-            margin: 0 0 6px 0;
-        }
-        .validation-errors ul {
-            margin: 0;
-            padding-left: 18px;
-            color: var(--color-red);
-            font-size: 0.82em;
-        }
-        .validation-errors li       { margin-bottom: 3px; }
+        .dup-header  { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .dup-icon    { font-size: 1.2em; flex-shrink: 0; }
+        .dup-title   { font-size: 0.92em; font-weight: 700; color: #92400e; }
+        .dup-desc    { font-size: 0.85em; color: #78350f; line-height: 1.5; margin: 0 0 12px; }
+        .dup-actions { display: flex; gap: 8px; }
+        .dup-btn     { flex: 1; border: none; border-radius: 50px; padding: 9px 16px; font-size: 0.88em; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .dup-btn:hover              { opacity: 0.85; }
+        .dup-btn.replace            { background: var(--color-warning); color: white; }
+        .dup-btn.cancel-dup         { background: #e8e8e8; color: var(--color-dark); }
 
-        /* ── BUTTONS ────────────────────────────────────── */
-        .button-group               { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        /* ── ERRORES DE VALIDACIÓN ───────────────────────── */
+        .validation-errors      { background: #fff5f5; border: 1px solid #ffcccc; border-radius: 10px; padding: 10px 14px; text-align: left; display: none; }
+        .validation-errors .ve-title { color: var(--color-red); font-size: 0.85em; font-weight: 600; margin: 0 0 6px; }
+        .validation-errors ul   { margin: 0; padding-left: 18px; color: var(--color-red); font-size: 0.82em; }
+        .validation-errors li   { margin-bottom: 3px; }
 
+        /* ── BOTONES ─────────────────────────────────────── */
+        .button-group { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
         button {
-            background: var(--color-liverpool);
-            color: var(--color-white);
-            border: none;
-            padding: 14px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            width: 100%;
+            background: var(--color-liverpool); color: var(--color-white);
+            border: none; padding: 14px 20px; border-radius: 50px;
+            cursor: pointer; font-size: 1em; font-weight: 600; width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(231,0,123,0.3); }
-        button.secondary            { background-color: var(--color-gray); }
-        button.secondary:hover:not(:disabled) { box-shadow: 0 5px 15px rgba(134,134,139,0.3); }
-        button.tertiary             { background-color: #e8e8e8; color: var(--color-dark); }
-        button.tertiary:hover:not(:disabled)  { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        button:disabled             { background-color: #e0e0e0 !important; color: #a0a0a0 !important; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+        button:hover:not(:disabled)           { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(231,0,123,0.3); }
+        button.secondary                       { background-color: var(--color-gray); }
+        button.secondary:hover:not(:disabled)  { box-shadow: 0 5px 15px rgba(134,134,139,0.3); }
+        button.tertiary                        { background-color: #e8e8e8; color: var(--color-dark); }
+        button.tertiary:hover:not(:disabled)   { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        button:disabled                        { background-color: #e0e0e0 !important; color: #a0a0a0 !important; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
 
-        /* ── LOADER ─────────────────────────────────────── */
-        #loader                     { display: none; }
-        .spinner                    { margin: 20px auto 0; border: 4px solid #f3f3f3; border-top: 4px solid var(--color-liverpool); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
-        @keyframes spin             { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #loader-text                { display: none; font-size: 0.88em; color: var(--color-gray); margin-top: 6px; }
+        /* ── LOADER ──────────────────────────────────────── */
+        #loader        { display: none; }
+        .spinner       { margin: 16px auto 0; border: 4px solid #f3f3f3; border-top: 4px solid var(--color-liverpool); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #loader-text   { display: none; font-size: 0.88em; color: var(--color-gray); margin-top: 6px; }
 
-        /* ── STATUS MESSAGE ─────────────────────────────── */
-        #status-message {
-            font-weight: 600;
-            padding: 12px;
-            border-radius: 10px;
-            color: white;
-            display: none;
-            font-size: 0.92em;
-            text-align: left;
-        }
+        /* ── STATUS ──────────────────────────────────────── */
+        #status-message { font-weight: 600; padding: 12px; border-radius: 10px; color: white; display: none; font-size: 0.92em; text-align: left; }
     </style>
 </head>
 <body>
@@ -252,28 +199,59 @@
         <!-- ── VISTA 2: EDICIÓN DE DATOS ── -->
         <div id="edit-view">
             <h3>Verificar Datos Extraídos</h3>
-            <p>Corrige los datos si es necesario y confirma para actualizar.</p>
-            <div class="edit-header-meta">
-                <span id="report-date-display"></span>
-                <span id="row-counter"></span>
+            <p>Confirma la fecha, corrige los datos si es necesario y acepta.</p>
+
+            <!-- Campo de fecha siempre editable -->
+            <div class="date-field">
+                <div class="date-field-row">
+                    <div style="flex:1">
+                        <label class="date-label" for="report-date-input">📅 Fecha del Reporte</label>
+                        <div class="date-input-wrapper">
+                            <input type="text"
+                                   id="report-date-input"
+                                   class="date-input"
+                                   placeholder="DD/MM/YYYY"
+                                   maxlength="10"
+                                   autocomplete="off"
+                                   inputmode="numeric">
+                            <span id="date-valid-icon"></span>
+                        </div>
+                    </div>
+                    <span id="row-counter" style="align-self:flex-end; padding-bottom:2px"></span>
+                </div>
+                <!-- Aviso: solo visible cuando la IA no detectó la fecha -->
+                <p id="date-warning">⚠️ La IA no pudo detectar la fecha del reporte. Ingrésala manualmente antes de continuar.</p>
             </div>
+
+            <!-- Tabla de asesores -->
             <div class="table-container">
                 <table>
                     <thead>
-                        <tr>
-                            <th>Asesor</th>
-                            <th>Boletas</th>
-                            <th>Monto</th>
-                            <th></th>
-                        </tr>
+                        <tr><th>Asesor</th><th>Boletas</th><th>Monto</th><th></th></tr>
                     </thead>
                     <tbody id="data-table-body"></tbody>
                 </table>
             </div>
+
+            <!-- Banner de duplicado (oculto por defecto) -->
+            <div id="duplicate-banner">
+                <div class="dup-header">
+                    <span class="dup-icon">⚠️</span>
+                    <span class="dup-title">Reporte ya registrado para esa fecha</span>
+                </div>
+                <p class="dup-desc" id="dup-desc"></p>
+                <div class="dup-actions">
+                    <button class="dup-btn replace" onclick="confirmDuplicate()">Reemplazar datos</button>
+                    <button class="dup-btn cancel-dup" onclick="cancelDuplicate()">Cancelar</button>
+                </div>
+            </div>
+
+            <!-- Errores de validación -->
             <div id="validation-errors" class="validation-errors">
                 <p class="ve-title">Corrige los siguientes errores antes de continuar:</p>
                 <ul id="error-list"></ul>
             </div>
+
             <div class="button-group">
                 <button id="addRowButton" class="tertiary" onclick="addRow()">+ Añadir Fila</button>
                 <button id="cancelButton" class="secondary" onclick="cancelUpdate()">Cancelar</button>
@@ -289,11 +267,10 @@
 
 <script>
     // ═══════════════════════════════════════════════════════════════
-    //  CONFIGURACIÓN CENTRAL
-    //  Todos los límites y reglas en un solo lugar.
+    //  CONFIGURACIÓN
     // ═══════════════════════════════════════════════════════════════
     const CONFIG = {
-        MAX_FILE_SIZE_BYTES : 10 * 1024 * 1024,  // 10 MB
+        MAX_FILE_SIZE_BYTES : 10 * 1024 * 1024,
         MAX_FILE_SIZE_LABEL : '10 MB',
         ALLOWED_MIME_TYPES  : ['image/png', 'image/jpeg', 'image/webp', 'image/gif'],
         ALLOWED_EXTENSIONS  : ['.png', '.jpg', '.jpeg', '.webp', '.gif'],
@@ -325,81 +302,119 @@
     const rowCounter    = document.getElementById('row-counter');
     const validationBox = document.getElementById('validation-errors');
     const errorList     = document.getElementById('error-list');
+    const dateInput     = document.getElementById('report-date-input');
+    const dateIcon      = document.getElementById('date-valid-icon');
+    const dateWarning   = document.getElementById('date-warning');
+    const dupBanner     = document.getElementById('duplicate-banner');
+    const dupDesc       = document.getElementById('dup-desc');
 
-    let processedDataCache = null;
+    let processedDataCache  = null;  // datos devueltos por Gemini
+    let pendingSubmitPayload = null; // payload guardado para retry en caso de duplicado
 
     // ═══════════════════════════════════════════════════════════════
-    //  UTILIDADES DE SEGURIDAD
+    //  SEGURIDAD — ESCAPE HTML
     // ═══════════════════════════════════════════════════════════════
-
-    /**
-     * Escapa caracteres HTML para prevenir XSS al insertar datos
-     * externos en atributos o contenido del DOM.
-     */
     function escapeHtml(str) {
         if (str === null || str === undefined) return '';
         return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
             .replace(/'/g, '&#039;');
     }
 
-    /** Formatea bytes a texto legible. */
     function formatBytes(bytes) {
-        if (bytes < 1024)          return bytes + ' B';
-        if (bytes < 1024 * 1024)   return (bytes / 1024).toFixed(1) + ' KB';
+        if (bytes < 1024)        return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
         return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  VALIDACIÓN DE FECHA (FRONTEND)
+    //  Espejo de isValidReportDate() en el backend.
+    // ═══════════════════════════════════════════════════════════════
+    function isValidDateFrontend(dateStr) {
+        if (!dateStr) return false;
+        const match = dateStr.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (!match) return false;
+        const day = parseInt(match[1]), month = parseInt(match[2]), year = parseInt(match[3]);
+        if (month < 1 || month > 12)    return false;
+        if (day   < 1 || day   > 31)    return false;
+        if (year  < 2020 || year > 2099) return false;
+        const d = new Date(year, month - 1, day);
+        return d.getFullYear() === year && d.getMonth() === month - 1 && d.getDate() === day;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  AUTOMASK DEL CAMPO DE FECHA (DD/MM/YYYY)
+    // ═══════════════════════════════════════════════════════════════
+    dateInput.addEventListener('input', (e) => {
+        // Mantener solo dígitos y construir la máscara
+        let digits = e.target.value.replace(/\D/g, '').slice(0, 8);
+        let masked = digits;
+        if (digits.length > 2) masked = digits.slice(0, 2) + '/' + digits.slice(2);
+        if (digits.length > 4) masked = digits.slice(0, 2) + '/' + digits.slice(2, 4) + '/' + digits.slice(4);
+        e.target.value = masked;
+        refreshDateIcon(masked);
+    });
+
+    dateInput.addEventListener('keydown', (e) => {
+        // Permite Backspace borrar la barra automáticamente
+        if (e.key === 'Backspace' && (dateInput.value.endsWith('/') || dateInput.value.length === 3 || dateInput.value.length === 6)) {
+            e.preventDefault();
+            dateInput.value = dateInput.value.slice(0, -1);
+            refreshDateIcon(dateInput.value);
+        }
+    });
+
+    function refreshDateIcon(val) {
+        dateInput.classList.remove('invalid', 'date-ok', 'date-needs-input');
+        if (val.length === 0) {
+            dateIcon.textContent = '';
+        } else if (val.length < 10) {
+            dateIcon.textContent = '';
+        } else if (isValidDateFrontend(val)) {
+            dateInput.classList.add('date-ok');
+            dateIcon.textContent = '✓';
+            dateIcon.style.color = 'var(--color-green)';
+        } else {
+            dateInput.classList.add('invalid');
+            dateIcon.textContent = '✕';
+            dateIcon.style.color = 'var(--color-red)';
+        }
+    }
+
+    function setDateField(dateStr, needsInput = false) {
+        dateInput.value = dateStr || '';
+        refreshDateIcon(dateInput.value);
+        dateWarning.style.display = needsInput ? 'block' : 'none';
+        if (needsInput) dateInput.classList.add('date-needs-input');
     }
 
     // ═══════════════════════════════════════════════════════════════
     //  VALIDACIÓN DE ARCHIVO
     // ═══════════════════════════════════════════════════════════════
-
-    /**
-     * Valida un archivo de imagen con múltiples capas de comprobación.
-     * @returns {{ valid: boolean, error?: string }}
-     */
     function validateFile(file) {
-        if (!file) return { valid: false, error: 'No se seleccionó ningún archivo.' };
-
-        if (file.size === 0)
-            return { valid: false, error: 'El archivo seleccionado está vacío.' };
-
+        if (!file)           return { valid: false, error: 'No se seleccionó ningún archivo.' };
+        if (file.size === 0) return { valid: false, error: 'El archivo seleccionado está vacío.' };
         if (file.size > CONFIG.MAX_FILE_SIZE_BYTES)
-            return { valid: false, error: `El archivo supera el límite de ${CONFIG.MAX_FILE_SIZE_LABEL}. Tamaño actual: ${formatBytes(file.size)}.` };
-
-        // Capa 1: MIME type
+            return { valid: false, error: `El archivo supera ${CONFIG.MAX_FILE_SIZE_LABEL}. Tamaño actual: ${formatBytes(file.size)}.` };
         if (!CONFIG.ALLOWED_MIME_TYPES.includes(file.type))
-            return { valid: false, error: `Tipo de archivo no permitido "${file.type || 'desconocido'}". Usa PNG, JPG o WEBP.` };
-
-        // Capa 2: extensión (defensa en profundidad)
-        const parts = file.name.split('.');
-        if (parts.length < 2) return { valid: false, error: 'El archivo no tiene extensión.' };
-        const ext = '.' + parts.pop().toLowerCase();
+            return { valid: false, error: `Tipo no permitido (${file.type || 'desconocido'}). Usa PNG, JPG o WEBP.` };
+        const ext = '.' + file.name.split('.').pop().toLowerCase();
         if (!CONFIG.ALLOWED_EXTENSIONS.includes(ext))
             return { valid: false, error: `Extensión no permitida (${ext}). Usa PNG, JPG o WEBP.` };
-
         return { valid: true };
     }
 
     // ═══════════════════════════════════════════════════════════════
-    //  VALIDACIÓN DE DATOS DE LA TABLA
+    //  VALIDACIÓN DE TABLA
     // ═══════════════════════════════════════════════════════════════
-
-    /**
-     * Valida cada fila de la tabla antes de enviar al backend.
-     * Marca los campos inválidos visualmente.
-     * @returns {{ valid: boolean, errors: string[], agents: Array }}
-     */
     function validateTableData() {
         const tableBody = document.getElementById('data-table-body');
         const rows      = tableBody.querySelectorAll('tr');
         const errors    = [];
         const agents    = [];
 
-        // Limpiar marcas de error previas
         tableBody.querySelectorAll('input.invalid').forEach(i => i.classList.remove('invalid'));
 
         if (rows.length === 0) {
@@ -411,373 +426,311 @@
             const nameInput    = row.querySelector('.name-input');
             const ticketsInput = row.querySelector('.tickets-input');
             const amountInput  = row.querySelector('.amount-input');
+            const rawName      = nameInput.value.trim();
+            const rawTickets   = ticketsInput.value.trim();
+            const rawAmount    = amountInput.value.trim();
+            const rowNum       = idx + 1;
+            let   rowValid     = true;
 
-            const rawName    = nameInput.value.trim();
-            const rawTickets = ticketsInput.value.trim();
-            const rawAmount  = amountInput.value.trim();
-            const rowNum     = idx + 1;
-            let   rowValid   = true;
-
-            // — Nombre
             if (rawName.length === 0) {
-                errors.push(`Fila ${rowNum}: El nombre del asesor está vacío.`);
-                nameInput.classList.add('invalid');
-                rowValid = false;
+                errors.push(`Fila ${rowNum}: Nombre vacío.`); nameInput.classList.add('invalid'); rowValid = false;
             } else if (rawName.length < CONFIG.MIN_NAME_LENGTH) {
-                errors.push(`Fila ${rowNum}: El nombre es demasiado corto (mínimo ${CONFIG.MIN_NAME_LENGTH} caracteres).`);
-                nameInput.classList.add('invalid');
-                rowValid = false;
+                errors.push(`Fila ${rowNum}: Nombre demasiado corto.`); nameInput.classList.add('invalid'); rowValid = false;
             } else if (rawName.length > CONFIG.MAX_NAME_LENGTH) {
-                errors.push(`Fila ${rowNum}: El nombre excede ${CONFIG.MAX_NAME_LENGTH} caracteres.`);
-                nameInput.classList.add('invalid');
-                rowValid = false;
+                errors.push(`Fila ${rowNum}: Nombre excede ${CONFIG.MAX_NAME_LENGTH} caracteres.`); nameInput.classList.add('invalid'); rowValid = false;
             }
 
-            // — Boletas: entero, entre 0 y MAX_TICKETS
-            const tickets    = Number(rawTickets);
-            const ticketsOk  = rawTickets !== '' && !isNaN(tickets) && Number.isInteger(tickets) && tickets >= 0 && tickets <= CONFIG.MAX_TICKETS;
+            const tickets   = Number(rawTickets);
+            const ticketsOk = rawTickets !== '' && !isNaN(tickets) && Number.isInteger(tickets) && tickets >= 0 && tickets <= CONFIG.MAX_TICKETS;
             if (!ticketsOk) {
-                errors.push(`Fila ${rowNum}${rawName ? ' (' + rawName + ')' : ''}: Boletas inválidas. Debe ser un número entero entre 0 y ${CONFIG.MAX_TICKETS}.`);
-                ticketsInput.classList.add('invalid');
-                rowValid = false;
+                errors.push(`Fila ${rowNum}${rawName ? ' (' + rawName + ')' : ''}: Boletas inválidas (entero 0–${CONFIG.MAX_TICKETS}).`);
+                ticketsInput.classList.add('invalid'); rowValid = false;
             }
 
-            // — Monto: número, entre 0 y MAX_AMOUNT
             const amount   = parseFloat(rawAmount);
             const amountOk = rawAmount !== '' && !isNaN(amount) && amount >= 0 && amount <= CONFIG.MAX_AMOUNT;
             if (!amountOk) {
-                errors.push(`Fila ${rowNum}${rawName ? ' (' + rawName + ')' : ''}: Monto inválido. Debe ser entre 0 y ${CONFIG.MAX_AMOUNT.toLocaleString('es-MX')}.`);
-                amountInput.classList.add('invalid');
-                rowValid = false;
+                errors.push(`Fila ${rowNum}${rawName ? ' (' + rawName + ')' : ''}: Monto inválido (0–${CONFIG.MAX_AMOUNT.toLocaleString('es-MX')}).`);
+                amountInput.classList.add('invalid'); rowValid = false;
             }
 
-            if (rowValid) {
-                agents.push({
-                    name:    rawName,
-                    tickets: tickets,
-                    amount:  parseFloat(amount.toFixed(2))
-                });
-            }
+            if (rowValid) agents.push({ name: rawName, tickets, amount: parseFloat(amount.toFixed(2)) });
         });
 
-        // — Nombres duplicados (solo si ya no hay otros errores)
         if (agents.length > 0) {
-            const names      = agents.map(a => a.name.toLowerCase());
-            const duplicates = names.filter((n, i) => names.indexOf(n) !== i);
-            if (duplicates.length > 0) {
-                const unique = [...new Set(duplicates)];
-                errors.push(`Nombres duplicados encontrados: "${unique.join('", "')}". Verifica si son la misma persona.`);
-            }
+            const names = agents.map(a => a.name.toLowerCase());
+            const dups  = [...new Set(names.filter((n, i) => names.indexOf(n) !== i))];
+            if (dups.length > 0) errors.push(`Nombres duplicados: "${dups.join('", "')}". Verifica si son la misma persona.`);
         }
 
         return { valid: errors.length === 0, errors, agents };
     }
 
     // ═══════════════════════════════════════════════════════════════
-    //  EVENTOS DE CARGA DE ARCHIVO
+    //  EVENTOS DE CARGA
     // ═══════════════════════════════════════════════════════════════
-
-    dropZone.addEventListener('click', () => {
-        if (!dropZone.classList.contains('is-loading')) fileInput.click();
-    });
-
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) handleFiles(e.target.files);
-    });
-
-    dropZone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        if (!dropZone.classList.contains('is-loading'))
-            dropZone.style.borderColor = 'var(--color-liverpool)';
-    });
-
-    dropZone.addEventListener('dragleave', () => {
-        dropZone.style.borderColor = '#dcdce0';
-    });
-
+    dropZone.addEventListener('click',    () => { if (!dropZone.classList.contains('is-loading')) fileInput.click(); });
+    fileInput.addEventListener('change',  (e) => { if (e.target.files.length > 0) handleFiles(e.target.files); });
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); if (!dropZone.classList.contains('is-loading')) dropZone.style.borderColor = 'var(--color-liverpool)'; });
+    dropZone.addEventListener('dragleave',() => { dropZone.style.borderColor = '#dcdce0'; });
     dropZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropZone.style.borderColor = '#dcdce0';
-        if (dropZone.classList.contains('is-loading')) return;
-        if (e.dataTransfer.files.length > 0) {
-            fileInput.files = e.dataTransfer.files;
-            handleFiles(e.dataTransfer.files);
+        e.preventDefault(); dropZone.style.borderColor = '#dcdce0';
+        if (!dropZone.classList.contains('is-loading') && e.dataTransfer.files.length > 0) {
+            fileInput.files = e.dataTransfer.files; handleFiles(e.dataTransfer.files);
         }
     });
-
     document.addEventListener('paste', (e) => {
         if (dropZone.classList.contains('is-loading')) return;
         const items = e.clipboardData.files;
-        if (items.length > 0 && items[0].type.startsWith('image/')) {
-            fileInput.files = items;
-            handleFiles(items);
-        }
+        if (items.length > 0 && items[0].type.startsWith('image/')) { fileInput.files = items; handleFiles(items); }
     });
 
     function handleFiles(files) {
-        const file = files[0];
+        const file  = files[0];
         clearStatus();
-
         const check = validateFile(file);
-        if (!check.valid) {
-            setStatus(check.error, 'error');
-            resetUploaderUI();
-            return;
-        }
+        if (!check.valid) { setStatus(check.error, 'error'); resetUploaderUI(); return; }
 
-        // Mostrar info del archivo (escapeHtml en el nombre para seguridad)
-        uploadPrompt.style.display   = 'none';
-        fileNameDisp.textContent     = file.name;          // textContent: seguro
-        fileSizeDisp.textContent     = formatBytes(file.size);
-        fileInfo.style.display       = 'block';
+        uploadPrompt.style.display = 'none';
+        fileNameDisp.textContent   = file.name;
+        fileSizeDisp.textContent   = formatBytes(file.size);
+        fileInfo.style.display     = 'block';
         dropZone.classList.add('has-file');
-        uploadButton.disabled        = false;
+        uploadButton.disabled      = false;
     }
 
     // ═══════════════════════════════════════════════════════════════
     //  PASO 1 — PROCESAR IMAGEN
     // ═══════════════════════════════════════════════════════════════
-
     function processFile() {
         const file = fileInput.files[0];
         if (!file) return;
-
-        // Re-validar justo antes de enviar (el usuario pudo haber manipulado el input)
         const check = validateFile(file);
-        if (!check.valid) {
-            setStatus(check.error, 'error');
-            return;
-        }
+        if (!check.valid) { setStatus(check.error, 'error'); return; }
 
         setLoadingState(true, 'Analizando imagen con IA…');
         dropZone.classList.add('is-loading');
 
-        const reader  = new FileReader();
+        const reader = new FileReader();
         reader.onload = (e) => {
             const fileData = e.target.result.split(',')[1];
-            if (!fileData) {
-                onFailure({ message: 'No se pudo leer el archivo. Intenta de nuevo.' });
-                return;
-            }
+            if (!fileData) { onFailure({ message: 'No se pudo leer el archivo.' }); return; }
             google.script.run
                 .withSuccessHandler(onProcessSuccess)
                 .withFailureHandler(onFailure)
-                .processImageOnly({
-                    fileName : file.name,
-                    mimeType : file.type,
-                    fileData : fileData
-                });
+                .processImageOnly({ fileName: file.name, mimeType: file.type, fileData });
         };
-        // Manejar errores del FileReader
-        reader.onerror = () => onFailure({ message: 'Error al leer el archivo. Intenta de nuevo.' });
+        reader.onerror = () => onFailure({ message: 'Error al leer el archivo localmente.' });
         reader.readAsDataURL(file);
     }
 
     // ═══════════════════════════════════════════════════════════════
-    //  PASO 1 (ÉXITO) — MOSTRAR TABLA DE EDICIÓN
+    //  PASO 1 (RESPUESTA) — MANEJAR needs_date Y success
     // ═══════════════════════════════════════════════════════════════
-
     function onProcessSuccess(response) {
         setLoadingState(false);
         dropZone.classList.remove('is-loading');
 
-        // Validar que la respuesta tenga la estructura esperada
         if (!response || typeof response !== 'object') {
-            onFailure({ message: 'Respuesta inesperada del servidor. Intenta de nuevo.' });
-            return;
+            onFailure({ message: 'Respuesta inesperada del servidor.' }); return;
         }
 
-        if (response.status === 'success') {
+        if (response.status === 'success' || response.status === 'needs_date') {
             if (!response.data || !Array.isArray(response.data.agents)) {
-                onFailure({ message: 'Los datos recibidos tienen un formato inesperado.' });
-                return;
+                onFailure({ message: 'Los datos recibidos tienen un formato inesperado.' }); return;
             }
             processedDataCache = response.data;
-            displayDataForEditing(response.data);
+
+            if (response.status === 'needs_date') {
+                // Mostrar vista de edición con campo de fecha vacío y aviso
+                displayDataForEditing(response.data, true);
+                setStatus('⚠️ ' + response.message, 'warning');
+            } else {
+                displayDataForEditing(response.data, false);
+            }
         } else {
             onFailure({ message: response.message || 'Error desconocido al procesar la imagen.' });
         }
     }
 
     // ═══════════════════════════════════════════════════════════════
-    //  PASO 2 — POBLAR Y GESTIONAR LA TABLA
+    //  PASO 2 — TABLA DE EDICIÓN
     // ═══════════════════════════════════════════════════════════════
+    function displayDataForEditing(data, needsDate = false) {
+        // Poblar campo de fecha
+        setDateField(data.reportDate || '', needsDate);
 
-    function displayDataForEditing(data) {
-        // textContent para el nombre de la fecha: seguro contra XSS
-        document.getElementById('report-date-display').textContent = `📅 ${data.reportDate}`;
         const tableBody = document.getElementById('data-table-body');
         tableBody.innerHTML = '';
-
-        // Acotar a MAX_ROWS por si el backend devuelve más registros de los esperados
-        const safeAgents = Array.isArray(data.agents)
-            ? data.agents.slice(0, CONFIG.MAX_ROWS)
-            : [];
-
-        safeAgents.forEach((agent) => appendRow(tableBody, agent.name, agent.tickets, agent.amount));
+        const safeAgents = Array.isArray(data.agents) ? data.agents.slice(0, CONFIG.MAX_ROWS) : [];
+        safeAgents.forEach(agent => appendRow(tableBody, agent.name, agent.tickets, agent.amount));
 
         updateRowCounter();
+        hideDuplicateBanner();
         hideValidationErrors();
+
         uploadView.style.display = 'none';
         editView.style.display   = 'block';
+
+        // Enfocar en el campo de fecha si necesita ingreso manual
+        if (needsDate) setTimeout(() => dateInput.focus(), 100);
     }
 
-    /**
-     * Crea e inserta una fila en el tbody.
-     * Usa escapeHtml() en los valores que se interpolan dentro de atributos HTML
-     * para prevenir XSS si el backend devuelve datos maliciosos.
-     */
     function appendRow(tbody, name = '', tickets = 0, amount = 0.00) {
         const row = tbody.insertRow();
         row.innerHTML = `
-            <td>
-                <input type="text"
-                       class="name-input"
-                       maxlength="${CONFIG.MAX_NAME_LENGTH}"
-                       value="${escapeHtml(String(name))}"
-                       placeholder="Nombre Asesor"
-                       autocomplete="off">
-            </td>
-            <td>
-                <input type="number"
-                       class="tickets-input"
-                       min="0"
-                       max="${CONFIG.MAX_TICKETS}"
-                       step="1"
-                       value="${escapeHtml(String(parseInt(tickets) || 0))}">
-            </td>
-            <td>
-                <input type="number"
-                       class="amount-input"
-                       min="0"
-                       max="${CONFIG.MAX_AMOUNT}"
-                       step="0.01"
-                       value="${parseFloat(amount || 0).toFixed(2)}">
-            </td>
-            <td>
-                <button class="delete-btn" onclick="deleteRow(this)" title="Eliminar fila">×</button>
-            </td>
+            <td><input type="text"   class="name-input"    maxlength="${CONFIG.MAX_NAME_LENGTH}" value="${escapeHtml(String(name))}" placeholder="Nombre Asesor" autocomplete="off"></td>
+            <td><input type="number" class="tickets-input" min="0" max="${CONFIG.MAX_TICKETS}" step="1" value="${escapeHtml(String(parseInt(tickets) || 0))}"></td>
+            <td><input type="number" class="amount-input"  min="0" max="${CONFIG.MAX_AMOUNT}"  step="0.01" value="${parseFloat(amount || 0).toFixed(2)}"></td>
+            <td><button class="delete-btn" onclick="deleteRow(this)" title="Eliminar fila">×</button></td>
         `;
     }
 
     function addRow() {
         const tableBody = document.getElementById('data-table-body');
-        if (tableBody.rows.length >= CONFIG.MAX_ROWS) {
-            setStatus(`Límite máximo de ${CONFIG.MAX_ROWS} asesores alcanzado.`, 'warning');
-            return;
-        }
-        clearStatus();
-        hideValidationErrors();
+        if (tableBody.rows.length >= CONFIG.MAX_ROWS) { setStatus(`Límite de ${CONFIG.MAX_ROWS} asesores alcanzado.`, 'warning'); return; }
+        clearStatus(); hideValidationErrors();
         appendRow(tableBody);
         updateRowCounter();
-
-        // Scroll al final y enfocar el nuevo campo de nombre
-        const container = document.querySelector('.table-container');
-        container.scrollTop = container.scrollHeight;
+        const cont = document.querySelector('.table-container');
+        cont.scrollTop = cont.scrollHeight;
         tableBody.rows[tableBody.rows.length - 1].querySelector('.name-input').focus();
     }
 
     function deleteRow(button) {
-        button.closest('tr').remove();
-        updateRowCounter();
-        hideValidationErrors();
-        clearStatus();
+        button.closest('tr').remove(); updateRowCounter(); hideValidationErrors(); clearStatus();
     }
 
     function updateRowCounter() {
         const count = document.getElementById('data-table-body').rows.length;
-        rowCounter.textContent = `${count} / ${CONFIG.MAX_ROWS} asesores`;
+        rowCounter.textContent = `${count} / ${CONFIG.MAX_ROWS}`;
         rowCounter.classList.toggle('at-limit', count >= CONFIG.MAX_ROWS);
         addRowButton.disabled = count >= CONFIG.MAX_ROWS;
     }
 
     // ═══════════════════════════════════════════════════════════════
-    //  PASO 3 — ENVIAR DATOS EDITADOS
+    //  PASO 3 — ENVIAR DATOS AL BACKEND
     // ═══════════════════════════════════════════════════════════════
-
     function submitEditedData() {
+        hideDuplicateBanner();
         hideValidationErrors();
         clearStatus();
 
-        if (!processedDataCache) {
-            setStatus('Error interno: no hay datos en caché. Vuelve a cargar la imagen.', 'error');
+        if (!processedDataCache) { setStatus('Error interno: vuelve a cargar la imagen.', 'error'); return; }
+
+        // Validar fecha del input antes que nada
+        const reportDate = dateInput.value.trim();
+        if (!isValidDateFrontend(reportDate)) {
+            dateInput.classList.add('invalid');
+            showValidationErrors(['La fecha del reporte no es válida. Usa el formato DD/MM/YYYY.']);
+            dateInput.focus();
             return;
         }
 
         const { valid, errors, agents } = validateTableData();
-        if (!valid) {
-            showValidationErrors(errors);
-            return;
-        }
+        if (!valid) { showValidationErrors(errors); return; }
 
-        setLoadingState(true, 'Actualizando hojas de cálculo…');
-        setEditButtons(true);
-
-        const finalData = {
-            reportDate : processedDataCache.reportDate,
-            storeType  : processedDataCache.storeType,
-            agents     : agents
+        const payload = {
+            reportDate,
+            storeType : processedDataCache.storeType,
+            agents,
+            force     : false
         };
 
+        sendToBackend(payload);
+    }
+
+    /**
+     * Centraliza el envío al backend y guarda el payload
+     * para un posible reintento con force:true en caso de duplicado.
+     */
+    function sendToBackend(payload) {
+        pendingSubmitPayload = payload;
+        setLoadingState(true, payload.force ? 'Reemplazando reporte anterior…' : 'Actualizando hojas de cálculo…');
+        setEditButtons(true);
+
         google.script.run
-            .withSuccessHandler(onUpdateSuccess)
+            .withSuccessHandler(onUpdateResponse)
             .withFailureHandler(onFailure)
-            .updateSheetsWithData(finalData);
+            .updateSheetsWithData(payload);
     }
 
     // ═══════════════════════════════════════════════════════════════
-    //  PASO 3 (ÉXITO)
+    //  PASO 3 (RESPUESTA) — success / duplicate_date / error
     // ═══════════════════════════════════════════════════════════════
-
-    function onUpdateSuccess(response) {
+    function onUpdateResponse(response) {
         setLoadingState(false);
 
         if (!response || typeof response !== 'object') {
-            onFailure({ message: 'Respuesta inesperada del servidor al actualizar.' });
-            return;
+            onFailure({ message: 'Respuesta inesperada del servidor al actualizar.' }); return;
         }
 
         if (response.status === 'success') {
             setStatus('✅ ' + (response.message || 'Actualización exitosa.'), 'success');
             setTimeout(() => google.script.host.close(), 2500);
-        } else {
-            onFailure({ message: response.message || 'Error desconocido al actualizar.' });
+            return;
         }
+
+        if (response.status === 'duplicate_date') {
+            // Mostrar banner de duplicado — el usuario decide si reemplaza
+            setEditButtons(false);
+            const count = response.existingCount || 0;
+            dupDesc.textContent = `${response.message} Tiene ${count} ${count === 1 ? 'registro' : 'registros'} en DriveCortes. Si la fecha fue corregida por ti, reemplaza para evitar duplicados en las hojas.`;
+            showDuplicateBanner();
+            return;
+        }
+
+        // Cualquier otro estado es error
+        onFailure({ message: response.message || 'Error desconocido al actualizar.' });
     }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  ACCIONES DEL BANNER DE DUPLICADO
+    // ═══════════════════════════════════════════════════════════════
+    function confirmDuplicate() {
+        if (!pendingSubmitPayload) return;
+        hideDuplicateBanner();
+        sendToBackend({ ...pendingSubmitPayload, force: true });
+    }
+
+    function cancelDuplicate() {
+        hideDuplicateBanner();
+        pendingSubmitPayload = null;
+        setEditButtons(false);
+        setStatus('Carga cancelada. Puedes corregir los datos o la fecha.', 'info');
+    }
+
+    function showDuplicateBanner() { dupBanner.style.display = 'block'; }
+    function hideDuplicateBanner() { dupBanner.style.display = 'none'; }
 
     // ═══════════════════════════════════════════════════════════════
     //  CANCELAR
     // ═══════════════════════════════════════════════════════════════
-
     function cancelUpdate() {
         const rowCount = document.getElementById('data-table-body').rows.length;
-        if (rowCount > 0 && !confirm('¿Cancelar? Los datos extraídos se perderán y tendrás que volver a cargar la imagen.')) {
-            return;
-        }
+        if (rowCount > 0 && !confirm('¿Cancelar? Los datos extraídos se perderán.')) return;
         editView.style.display   = 'none';
         uploadView.style.display = 'block';
-        processedDataCache       = null; // limpiar caché
+        processedDataCache       = null;
+        pendingSubmitPayload     = null;
         resetUploaderUI();
+        hideDuplicateBanner();
         hideValidationErrors();
     }
 
     // ═══════════════════════════════════════════════════════════════
     //  AUXILIARES
     // ═══════════════════════════════════════════════════════════════
-
     function onFailure(error) {
         setLoadingState(false);
         dropZone.classList.remove('is-loading');
         const msg = (error && typeof error.message === 'string' && error.message)
-            ? error.message
-            : 'Error desconocido. Intenta de nuevo.';
+            ? error.message : 'Error desconocido. Intenta de nuevo.';
         setStatus('⚠️ ' + msg, 'error');
-        // Rehabilitar todos los controles
         uploadButton.disabled = false;
         setEditButtons(false);
     }
 
-    /** Habilita o deshabilita todos los botones de la vista de edición. */
     function setEditButtons(disabled) {
         submitButton.disabled = disabled;
         cancelButton.disabled = disabled;
@@ -785,11 +738,11 @@
     }
 
     function setLoadingState(isLoading, message = '') {
-        loader.style.display          = isLoading ? 'block' : 'none';
-        loaderText.textContent        = message;
-        loaderText.style.display      = (isLoading && message) ? 'block' : 'none';
-        uploadButton.disabled         = isLoading;
-        submitButton.disabled         = isLoading;
+        loader.style.display        = isLoading ? 'block' : 'none';
+        loaderText.textContent      = message;
+        loaderText.style.display    = (isLoading && message) ? 'block' : 'none';
+        uploadButton.disabled       = isLoading;
+        submitButton.disabled       = isLoading;
     }
 
     function resetUploaderUI() {
@@ -804,37 +757,22 @@
     }
 
     function setStatus(message, type = 'info') {
-        const colors = {
-            success : 'var(--color-green)',
-            error   : 'var(--color-red)',
-            warning : 'var(--color-warning)',
-            info    : 'var(--color-blue)',
-        };
-        statusMsg.textContent        = message;
-        statusMsg.style.background   = colors[type] || colors.info;
-        statusMsg.style.display      = message ? 'block' : 'none';
+        const colors = { success:'var(--color-green)', error:'var(--color-red)', warning:'var(--color-warning)', info:'var(--color-blue)' };
+        statusMsg.textContent         = message;
+        statusMsg.style.background    = colors[type] || colors.info;
+        statusMsg.style.display       = message ? 'block' : 'none';
     }
 
-    function clearStatus() {
-        statusMsg.textContent  = '';
-        statusMsg.style.display = 'none';
-    }
+    function clearStatus() { statusMsg.textContent = ''; statusMsg.style.display = 'none'; }
 
     function showValidationErrors(errors) {
         errorList.innerHTML = '';
-        errors.forEach(err => {
-            const li = document.createElement('li');
-            li.textContent = err;   // textContent, nunca innerHTML: seguro contra XSS
-            errorList.appendChild(li);
-        });
+        errors.forEach(err => { const li = document.createElement('li'); li.textContent = err; errorList.appendChild(li); });
         validationBox.style.display = 'block';
         validationBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    function hideValidationErrors() {
-        validationBox.style.display = 'none';
-        errorList.innerHTML         = '';
-    }
+    function hideValidationErrors() { validationBox.style.display = 'none'; errorList.innerHTML = ''; }
 </script>
 </body>
 </html>
